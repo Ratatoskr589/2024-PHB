@@ -12938,36 +12938,58 @@ FeatsList["speedy"] = {
     },
 };
 FeatsList["spell sniper"] = {
-    name: "Spell Sniper",
-    source: [
-        ["P24", 208]
-    ],
-    regExpSearch: /^(?=.*spell)(?=.*sniper).*$/i,
-    description: "+1 Int/Wis/Cha my spells ignore half and three-quarter cover; casting in melee doesn't impose disadvantage; my ranged spells with a range of 10ft or more have their range increased by 60 ft",
-    descriptionFull: desc([
-        "You gain the following benefits",
-        "Ability Score Increase : Increase your Intelligence, Wisdom, or Charisma by 1, to a maximum of 20.",
-        "Bypass Cover : Your attack rolls for spells ignore Half Cover and Three-quarter Cover.",
-        "Casting in Melee : Being within 5 feet of an enemy doesn't impose Disadvantage on your attack rolls with spells.",
-        "Increased Range. When you cast a spell that has a range of at least 10 feet and requires you to make an attack roll, you can increase the spell's range by 60 feet.",
-    ]),
-    choices: ["Intelligence", "Wisdom", "Charisma"],
-    "intelligence": {
-        description: "My spells ignore half and three-quarter cover; casting in melee doesn't impose disadvantage; my ranged spells with a range of 10ft or more have their range increased by 60 ft. [+1 Intelligence]",
-        scores: [0, 0, 0, 1, 0, 0],
-    },
-    "wisdom": {
-        description: "My spells ignore half and three-quarter cover; casting in melee doesn't impose disadvantage; my ranged spells with a range of 10ft or more have their range increased by 60 ft. [+1 Wisdom]",
-        scores: [0, 0, 0, 0, 1, 0],
-    },
-    "charisma": {
-        description: "My spells ignore half and three-quarter cover; casting in melee doesn't impose disadvantage; my ranged spells with a range of 10ft or more have their range increased by 60 ft. [+1 Charisma]",
-        scores: [0, 0, 0, 0, 0, 1],
-    },
-    prerequisite: "Level 4 and has Spellcasting or Pact Magic Feature",
-    prereqeval: function(v) {
-        return v.characterLevel >= 4 && v.isSpellcaster;
-    },
+	name : "Spell Sniper",
+	source : ["P24", 208],
+	type : "general",
+	prerequisite : "Level 4+ and the Spellcasting or Pact Magic feature",
+	prereqeval : function(v) { 
+		return v.characterLevel >= 4 && v.isSpellcaster; 
+	},
+	description : "My spell attack rolls ignore half/three-quarters cover and lack Disadvantage when within 5 ft of a foe. Spells I cast requiring an attack roll with a range of 10+ ft have their range increased by 60 ft. [+1 Int, Wis, or Cha]",
+	descriptionFull : "You gain the following benefits.\nAbility Score Increase. Increase your Intelligence, Wisdom, or Charisma score by 1, to a maximum of 20.\nBypass cover. Your attack rolls for spells ignore Half Cover and Three-Quarters Cover.\nCasting in Melee. Being within 5 feet of an enemy doesn't impose Disadvantage on your attack rolls with spells.\nIncreased Range. When you cast a spell that has a range of at least 10 feet and requires you to make an attack roll, you can increase the spell's range by 60 feet.",
+	choices : ["Intelligence", "Wisdom", "Charisma"],
+	"intelligence" : {
+		description : "My spell attack rolls ignore half/three-quarters cover and lack Disadvantage when within 5 ft of a foe. Spells I cast requiring an attack roll with a range of 10+ ft have their range increased by 60 ft. [+1 Intelligence]",
+		scores : [0, 0, 0, 1, 0, 0]
+	},
+	"wisdom" : {
+		description : "My spell attack rolls ignore half/three-quarters cover and lack Disadvantage when within 5 ft of a foe. Spells I cast requiring an attack roll with a range of 10+ ft have their range increased by 60 ft. [+1 Wisdom]",
+		scores : [0, 0, 0, 0, 1, 0]
+	},
+	"charisma" : {
+		description : "My spell attack rolls ignore half/three-quarters cover and lack Disadvantage when within 5 ft of a foe. Spells I cast requiring an attack roll with a range of 10+ ft have their range increased by 60 ft. [+1 Charisma]",
+		scores : [0, 0, 0, 0, 0, 1]
+	},
+	calcChanges : {
+		atkAdd : [
+			function (fields, v) {
+				if (v.isSpell && v.thisWeapon && v.thisWeapon[3]) {
+					var spObj = SpellsList[v.thisWeapon[3]];
+					if (spObj && /(spell atk|spell attack|attack roll|make an attack|rngd atk|melee atk|ranged atk)/i.test(spObj.description)) {
+						var rngMatch = fields.Range.match(/\d+/);
+						if (rngMatch && parseInt(rngMatch[0]) >= 10 && !(/self|touch/i).test(fields.Range)) {
+							fields.Range = fields.Range.replace(rngMatch[0], parseInt(rngMatch[0]) + 60);
+						}
+						fields.Description += (fields.Description ? '; ' : '') + 'Ignores half/3/4 cover; No melee disadv.';
+					}
+				}
+			},
+			"My spell attack rolls ignore half and three-quarters cover and don't suffer Disadvantage from being within 5 ft of a hostile creature. If a spell requires an attack roll and has a range of at least 10 ft, its range increases by 60 ft."
+		],
+		spellAdd : [
+			function (spellKey, spellObj, spName) {
+				if (spellObj.range && !(/self|touch/i).test(spellObj.range) && /(spell atk|spell attack|attack roll|make an attack|rngd atk|melee atk|ranged atk)/i.test(spellObj.description)) {
+					var rngMatch = spellObj.range.match(/\d+/);
+					if (rngMatch && parseInt(rngMatch[0]) >= 10) {
+						var newRng = parseInt(rngMatch[0]) + 60;
+						spellObj.range = spellObj.range.replace(rngMatch[0], newRng);
+						spellObj.description += (spellObj.description ? '; ' : '') + 'Ignores 1/2 & 3/4 cover; No melee disadv.';
+					}
+				}
+			},
+			"Spells I cast that require an attack roll and have a range of at least 10 feet have their range increased by 60 feet. They also ignore half and three-quarters cover and don't suffer Disadvantage from being cast within 5 ft of a hostile creature."
+		]
+	}
 };
 FeatsList["telekinetic"] = {
     name: "Telekinetic",
@@ -13083,7 +13105,7 @@ FeatsList["war caster"] = {
     regExpSearch: /^(?=.*war)(?=.*caster).*$/i,
     action: ["reaction", " (Opportunity Spell)"],
     savetxt: {
-        text: "Adv. on Con (Concentration) saves"
+        text: "Adv. on Con (Concentration) saves when damaged"
     },
     description: "+1 Int/Wis/Cha Advantage on Con saves to maintain concentration on spells when damaged. Perform somatic components even when holding weapons or shield in one or both hands. Cast spell of 1 action casting time that targets only one creature instead of an opportunity attack.",
     descriptionFull: desc([
@@ -15467,7 +15489,7 @@ WeaponsList["true strike"] = {
     list: "spell",
     ability: 6,
     type: "Cantrip",
-    damage: ["1", 6, "radiant"],
+    damage: ["B", 6, "radiant"],
     range: "Melee, 5 ft",
     description: "As Part of this Spell make one Weapon Atk using your Spell mod instead of Str/Dex, Dmg can become Radiant",
     abilitytodamage: false,
@@ -15503,21 +15525,6 @@ WeaponsList["word of radiance"] = {
     abilitytodamage: false,
     dc: true
 };
-// Add weapon die scaling for true strike
-addEvals({
-    atkAdd: [
-        function(fields, v) {
-            if (v.WeaponName === "true strike") {
-                fields.Damage_Die = function(n) {
-                    return n < 5 ? '' : n < 11 ? '1d6' : n < 17 ? '2d6' : '3d6'
-                }(classes.totallevel);
-            }
-        },
-        "", // no description means it doesn't appear in the attack line menu's pop-up dialog
-        1
-    ]
-}, "True strike damage progression", true, "items");
-CurrentUpdates.types = []; // don't trigger the changes dialog for this
 // Add weapon die scaling for shillelagh
 addEvals({
     atkAdd: [
@@ -21213,7 +21220,6 @@ legacySpellRefactor("otto's irresistible dance", {
     range: "30 ft",
     components: "V",
     duration: "Conc, 1 min",
-	save: "Wis",
     description: "1 crea pass: dance to next EoT; fail: Charmed, no move, dis. atk/Dex saves, adv. atk vs it; 1 a save to end",
     descriptionFull: "One creature that you can see within range must make a Wisdom saving throw. On a successful save, The target dances comically until the end of its next turn, during which it must spend all its movement to dance in place." + "\n   " + "On a failed save, the target has the Charmed condition for the duration. While Charmed, the target dances comically, must use all its movement to dance in place, and has Disadvantage on Dexterity saving throws and attack rolls, and other creatures have Advantage on attack rolls against it. On each of its turns, the target can take an action to collect itself and repeat the save, ending the spell on itself on a success."
 });
@@ -25302,6 +25308,9 @@ CreatureList["skeleton"] = {
     speed: "30 ft",
     scores: [10, 16, 15, 6, 8, 5],
     saves: ["", "", "", "", "", ""],
+    skills: {
+        "stealth": 5,
+    },
     damage_vulnerabilities: "Bludgeoning",
     damage_immunities: "Poison",
     condition_immunities: "Exhausted; Poisoned",
