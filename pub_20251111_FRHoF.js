@@ -1,5 +1,5 @@
 var iFileName = "pub_20251111_FRHoF.js";
-RequiredSheetVersion("13.2.3");
+RequiredSheetVersion("13.2.3", 15);
 SourceList["FRHoF"] = {
     name: "Forgotten Realms: Heroes of Faerûn",
     abbreviation: "FRHoF",
@@ -3159,7 +3159,7 @@ SpellsList["death armor"] = {
     range: "Touch",
     components: "V,S,M\u2020",
     compMaterial: "an onyx worth 50+ GP, which the spell consumes",
-    duration: "1 hr",
+    duration: "1 h",
     description: "1 crea: Adv on Death saves. 1/turn, if hit by crea in 5-ft with melee atk, deal 2d4 Necrotic dmg to atkr",
     descriptionFull: [
         "For the duration, an inky aura surrounds one creature you touch. The target has Advantage on Death Saving Throws, and once per turn, when a creature within 5 feet of the target hits it with a melee attack roll, the attacker takes 2d4 Necrotic damage.",
@@ -3235,7 +3235,7 @@ SpellsList["elminster's effulgent spheres"] = {
     range: "Self",
     components: "V,S,M\u0192",
     compMaterial: "an opal worth 1000+ GP",
-    duration: "1 hr",
+    duration: "1 h",
     description: "6+1/SL orbs. Use 1: ba R. spell atk 120 ft 3d6 dmg (A/C/F/L/T) or Rea on elem. dmg Resist to next turn",
     descriptionFull: [
         "Six chromatic spheres orbit you for the duration." + "\n   " + "While the spheres are present, you can expend spheres to create the following effects:" + "\n   " + "***Absorb Energy***. When you take Acid, Cold, Fire, Lightning, or Thunder damage, you can take a Reaction to expend one sphere and give yourself Resistance to the triggering damage type until the start of your next turn." + "\n   " + "***Energy Blast***. As a Bonus Action, you send one sphere hurtling toward a target within 120 feet of yourself. Make a ranged spell attack. On a hit, the target takes 3d6 Acid, Cold, Fire, Lightning, or Thunder damage (your choice). Regardless of whether you hit, the sphere is expended." + "\n   " + "The spell ends early if you have no more spheres remaining." + AtHigherLevels + "The number of spheres increases by 1 for every spell slot level above 6.",
@@ -3306,7 +3306,7 @@ SpellsList["simbul's Synostodweomer"] = {
     time: "1 a",
     range: "Touch",
     components: "V,S",
-    duration: "1 hr",
+    duration: "1 h",
     description: "1 crea. When they cast with a spell slot, can spend slot level unused HD to heal roll + my spell mod HP",
     descriptionFull: [
         "You imbue one creature you touch with magical healing energy for the duration. Whenever the target casts a spell using a spell slot, the target can immediately roll a number of expended Hit Point Dice equal to the spell slot's level and regain Hit Points equal to the roll's total plus your spellcasting ability modifier; those dice are then expended.",
@@ -3378,7 +3378,7 @@ SpellsList["sylune's viper"] = {
     range: "Self",
     components: "V,S,M",
     compMaterial: "a snake fang",
-    duration: "1 hr",
+    duration: "1 h",
     description: "15+5/SL THP. If THP: Climb Spd; R. spell atk 50 ft, 1d6+1d6/SL Force dmg + Incapac. 1 rnd if Poisonable",
     descriptionFull: [
         "A shimmering, spectral snake encircles your body for the duration. You gain 15 Temporary Hit Points; the spell ends early if you have no Temporary Hit Points left." + "\n   " + "While the spell is active, you gain the following benefits:" + "\n   " + "***Climbing***. You gain a Climb Speed equal to your Speed." + "\n   " + "***Venomous Bite***. As a Magic Action, you can make a ranged spell attack using the snake against one creature within 50 feet. On a hit, the target takes 1d6 Force damage and has the Poisoned condition until the start of your next turn. While Poisoned, the target has the Incapacitated condition." + AtHigherLevels + "For each spell slot level above 3, the number of Temporary Hit Points you gain from this spell increases by 5, and the damage of the Venomous Bite increases by 1d6.",
